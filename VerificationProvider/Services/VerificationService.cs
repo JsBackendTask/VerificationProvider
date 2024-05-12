@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using VerificationProvider.Data.Contexts;
 using VerificationProvider.Data.Entities;
+using VerificationProvider.Interfaces;
 using VerificationProvider.Models;
 
 namespace VerificationProvider.Services;

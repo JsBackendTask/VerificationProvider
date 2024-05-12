@@ -1,7 +1,7 @@
 using Azure.Messaging.ServiceBus;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using VerificationProvider.Services;
+using VerificationProvider.Interfaces;
 
 namespace VerificationProvider.Functions;
 

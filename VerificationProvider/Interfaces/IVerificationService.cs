@@ -2,7 +2,7 @@
 using VerificationProvider.Data.Entities;
 using VerificationProvider.Models;
 
-namespace VerificationProvider.Services
+namespace VerificationProvider.Interfaces
 {
     public interface IVerificationService
     {
