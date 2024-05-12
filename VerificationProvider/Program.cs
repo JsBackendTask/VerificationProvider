@@ -16,6 +16,7 @@ var host = new HostBuilder()
         services.AddDbContext<DataContext>(x => x.UseSqlServer(Environment.GetEnvironmentVariable("AzureSqlServer")));
         services.AddScoped<IVerificationService, VerificationService>();
         services.AddScoped<ICleanerService, CleanerService>();
+        services.AddScoped<IValidationVerificationService, ValidationVerificationService>();
     })
     .Build();
 
