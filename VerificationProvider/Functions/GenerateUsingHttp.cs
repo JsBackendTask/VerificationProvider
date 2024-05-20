@@ -12,7 +12,7 @@ namespace VerificationProvider.Functions
         private readonly IVerificationService _verificationService = verificationService;
 
         [Function("GenerateUsingHttp")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "Verify")] HttpRequest req)
         {
             try
             {
