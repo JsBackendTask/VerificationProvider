@@ -129,7 +129,7 @@ public class VerificationService(ILogger<VerificationService> logger, IServicePr
 
         return null!;
     }
-    public string GenerateServiceBusEmailReques0t(EmailRequest emailRequest)
+    public string GenerateServiceBusEmailRequest(EmailRequest emailRequest)
     {
         try
         {

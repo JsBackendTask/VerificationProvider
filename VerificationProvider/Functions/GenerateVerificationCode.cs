@@ -31,7 +31,7 @@ public class GenerateVerificationCode(ILogger<GenerateVerificationCode> logger, 
                         var emailRequest = verificationService.GeneratedEmailRequest(verficationToken, code);
                         if (emailRequest != null)
                         {
-                            var payload = verificationService.GenerateServiceBusEmailReques0t(emailRequest);
+                            var payload = verificationService.GenerateServiceBusEmailRequest(emailRequest);
                             if (!string.IsNullOrEmpty(payload))
                             {
                                 await messageActions.CompleteMessageAsync(message);

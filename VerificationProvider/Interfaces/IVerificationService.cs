@@ -8,7 +8,7 @@ namespace VerificationProvider.Interfaces
     {
         string GenerateCode();
         EmailRequest GeneratedEmailRequest(VerificationRequest verficationRequest, string code);
-        string GenerateServiceBusEmailReques0t(EmailRequest emailRequest);
+        string GenerateServiceBusEmailRequest(EmailRequest emailRequest);
         Task<bool> SaveVerificationRequest(VerificationRequest verficationToken, string code);
         VerificationRequest UnpackVerificationRequest(ServiceBusReceivedMessage message);
     }

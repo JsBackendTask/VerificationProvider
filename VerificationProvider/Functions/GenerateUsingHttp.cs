@@ -2,7 +2,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using VerificationProvider.Data.Entities;
 using VerificationProvider.Interfaces;
+using VerificationProvider.Models;
 
 namespace VerificationProvider.Functions
 {
@@ -12,18 +15,42 @@ namespace VerificationProvider.Functions
         private readonly IVerificationService _verificationService = verificationService;
 
         [Function("GenerateUsingHttp")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req)
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "Verify")] HttpRequest req)
         {
             try
             {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                var data = JsonConvert.DeserializeObject<SendEmailRequest>(requestBody);
+
+                if (data == null || string.IsNullOrEmpty(data.Email))
+                {
+                    return new BadRequestObjectResult("Please provide an email address.");
+                }
+
+                var verificationRequest = new VerificationRequest { Email = data.Email };
                 var code = _verificationService.GenerateCode();
-                return new OkObjectResult(code);
+
+                var result = await _verificationService.SaveVerificationRequest(verificationRequest, code);
+                if (result)
+                {
+                    var emailRequest = _verificationService.GeneratedEmailRequest(verificationRequest, code);
+                    if (emailRequest != null)
+                    {
+                        var payload = _verificationService.GenerateServiceBusEmailRequest(emailRequest);
+                        if (!string.IsNullOrEmpty(payload))
+                        {
+                            return new OkObjectResult(payload);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"ERROR : GenerateUsingHttp.Run() :: {ex.Message}");
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
+
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }
 }
