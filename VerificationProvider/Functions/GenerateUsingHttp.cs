@@ -1,6 +1,8 @@
+using Azure.Messaging.ServiceBus;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using VerificationProvider.Data.Entities;
@@ -39,6 +41,9 @@ namespace VerificationProvider.Functions
                         var payload = _verificationService.GenerateServiceBusEmailRequest(emailRequest);
                         if (!string.IsNullOrEmpty(payload))
                         {
+                            var client = new ServiceBusClient(Environment.GetEnvironmentVariable("ServiceBusConnection"));
+                            var sender = client.CreateSender("email_request");
+                            await sender.SendMessageAsync(new ServiceBusMessage(payload));
                             return new OkObjectResult(payload);
                         }
                     }
